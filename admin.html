@@ -1522,17 +1522,40 @@ Chỉ trả về JSON, không thêm bất kỳ văn bản nào khác.`;
             });
         }
 
+        // ==================== KIỂM TRA QUYỀN ADMIN ====================
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentAdminId = user.uid;
-                generateFakeUsers();
-                loadDashboard();
-                loadCategories();
-                loadCards();
-                loadRealUsers();
-                loadUserVocabulary();
-                loadCategoryDropdowns();
+                
+                // Kiểm tra xem người dùng có phải là Admin hay không
+                db.collection('users').doc(user.uid).get()
+                    .then((doc) => {
+                        if (doc.exists && doc.data().role === 'admin') {
+                            // Là Admin → cho phép truy cập
+                            generateFakeUsers();
+                            loadDashboard();
+                            loadCategories();
+                            loadCards();
+                            loadRealUsers();
+                            loadUserVocabulary();
+                            loadCategoryDropdowns();
+                        } else {
+                            // Không phải Admin → chặn truy cập
+                            alert('⛔ Bạn không có quyền truy cập trang Quản trị!\nChỉ tài khoản Admin mới được phép vào đây.');
+                            auth.signOut().then(() => {
+                                window.location.href = 'main.html';
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Lỗi kiểm tra quyền Admin:', error);
+                        alert('Có lỗi xảy ra khi kiểm tra quyền truy cập. Vui lòng thử lại.');
+                        auth.signOut().then(() => {
+                            window.location.href = 'login.html';
+                        });
+                    });
             } else {
+                // Chưa đăng nhập
                 window.location.href = 'login.html';
             }
         });
