@@ -2264,8 +2264,26 @@
             const front = flashcard.querySelector('.front');
             const wordContainer = document.createElement('div');
             wordContainer.className = 'word-with-voice';
-            wordContainer.innerHTML = '<h1>' + escapeHtml(card.word) + '</h1>';
-            wordContainer.appendChild(createVoiceButton(card.word));
+            wordContainer.style.flexDirection = 'column';
+            wordContainer.style.alignItems = 'center';
+            wordContainer.style.gap = '8px';
+            
+            let frontHtml = '<div style="display: flex; align-items: center; justify-content: center;">';
+            frontHtml += '<h1 style="margin: 0;">' + escapeHtml(card.word) + '</h1>';
+            frontHtml += '</div>';
+            
+            if (card.pronunciation) {
+                frontHtml += '<div style="font-size: 1.1rem; opacity: 0.95; margin-top: 4px;">/' + escapeHtml(card.pronunciation) + '/</div>';
+            }
+            
+            wordContainer.innerHTML = frontHtml;
+            
+            const voiceBtn = createVoiceButton(card.word);
+            const h1Container = wordContainer.querySelector('div');
+            if (h1Container) {
+                h1Container.appendChild(voiceBtn);
+            }
+            
             if (front) {
                 front.innerHTML = '';
                 front.appendChild(wordContainer);
@@ -2356,8 +2374,26 @@
             const front = flashcard.querySelector('.front');
             const wordContainer = document.createElement('div');
             wordContainer.className = 'word-with-voice';
-            wordContainer.innerHTML = '<h1>' + escapeHtml(card.word) + '</h1>';
-            wordContainer.appendChild(createVoiceButton(card.word));
+            wordContainer.style.flexDirection = 'column';
+            wordContainer.style.alignItems = 'center';
+            wordContainer.style.gap = '8px';
+            
+            let frontHtml = '<div style="display: flex; align-items: center; justify-content: center;">';
+            frontHtml += '<h1 style="margin: 0;">' + escapeHtml(card.word) + '</h1>';
+            frontHtml += '</div>';
+            
+            if (card.pronunciation) {
+                frontHtml += '<div style="font-size: 1.1rem; opacity: 0.95; margin-top: 4px;">/' + escapeHtml(card.pronunciation) + '/</div>';
+            }
+            
+            wordContainer.innerHTML = frontHtml;
+            
+            const voiceBtn = createVoiceButton(card.word);
+            const h1Container = wordContainer.querySelector('div');
+            if (h1Container) {
+                h1Container.appendChild(voiceBtn);
+            }
+            
             if (front) {
                 front.innerHTML = '';
                 front.appendChild(wordContainer);
@@ -3475,3 +3511,7 @@
     </script>
 </body>
 </html>
+
+
+
+
