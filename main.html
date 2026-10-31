@@ -237,7 +237,6 @@
             margin-bottom: 10px;
         }
 
-        /* Popup Học tập - 6 nút con */
         .study-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -299,10 +298,12 @@
             background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
             color: white;
         }
-.action-btn.analytics-btn {
-    background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
-    color: white;
-}
+
+        .action-btn.analytics-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #1565C0 100%);
+            color: white;
+        }
+
         .action-btn.admin-btn {
             background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
             color: white;
@@ -763,7 +764,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .word-with-voice h1 {
@@ -776,7 +777,7 @@
             font-size: 1.15rem;
             opacity: 0.92;
             letter-spacing: 0.5px;
-            margin-top: 4px;
+            margin-top: 2px;
             font-weight: 400;
         }
 
@@ -1125,7 +1126,7 @@
         </div>
 
         <!-- Popup học từ -->
- whow-up" id="learn-menu">
+        <div class="pop-up" id="learn-menu">
             <div class="pop-up-content">
                 <span id="close-learn-menu" class="material-symbols-outlined close">close</span>
                 <div class="card" id="flashcard">
@@ -1182,13 +1183,12 @@
             </div>
         </div>
 
-        <!-- Popup Dịch giọng nói / Văn bản (đã tách khỏi Chatbot) -->
+        <!-- Popup Dịch giọng nói / Văn bản -->
         <div class="pop-up" id="translate-menu">
             <div class="pop-up-content" style="max-width: 560px;">
                 <span id="close-translate-menu" class="material-symbols-outlined close">close</span>
                 <h2 style="margin-bottom: 12px;"><span class="material-symbols-outlined" style="vertical-align: middle; color: #4CAF50;">translate</span> Dịch giọng nói & Văn bản</h2>
 
-                <!-- Panel ghi âm + dịch -->
                 <div class="voice-translate-panel">
                     <h4><span class="material-symbols-outlined" style="font-size: 20px;">mic</span> Ghi âm & Dịch tự động</h4>
                     <div class="voice-direction">
@@ -1226,7 +1226,6 @@
                     </div>
                 </div>
 
-                <!-- Dịch bằng văn bản (hỗ trợ thêm) -->
                 <div class="voice-translate-panel translate-text-area" style="background: linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%); border-color: #90caf9;">
                     <h4 style="color: #1565C0;"><span class="material-symbols-outlined" style="font-size: 20px;">edit_note</span> Dịch bằng văn bản</h4>
                     <div class="form-group" style="margin-bottom: 10px;">
@@ -1239,7 +1238,6 @@
                     <div class="voice-status-text" id="text-translate-status" style="display: none;"></div>
                 </div>
 
-                <!-- Lịch sử dịch gần đây -->
                 <div style="margin-top: 12px;">
                     <h4 style="margin: 0 0 8px; font-size: 0.95rem; color: #555; display: flex; align-items: center; gap: 6px;">
                         <span class="material-symbols-outlined" style="font-size: 18px;">history</span> Lịch sử dịch gần đây
@@ -1250,7 +1248,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Popup Học tập (gộp 6 nút) -->
         <div class="pop-up" id="study-menu">
@@ -1315,13 +1312,11 @@
                 </div>
 
                 <div id="buttons">
-                    <!-- Nút Học tập (gộp 6 chức năng) -->
                     <button class="action-btn primary" id="study-main">
                         <span class="material-symbols-outlined">school</span>
                         Học tập
                     </button>
 
-                    <!-- Các nút còn lại -->
                     <button class="action-btn analytics-btn" id="analytics">
                         <span class="material-symbols-outlined">analytics</span>
                         Thống kê
@@ -1853,7 +1848,7 @@
         }
 
         // ============================================================
-        // TẢI VAI TRÒ NGƯỜI DÙNG (ADMIN)
+        // TẢI VAI TRÒ NGƯỜI DÙNG
         // ============================================================
         function loadUserRole() {
             const user = auth.currentUser;
@@ -1865,7 +1860,6 @@
                 .then(function(doc) {
                     if (doc.exists && doc.data().role === 'admin') {
                         isAdminUser = true;
-                        // Có thể thêm nút admin nếu cần
                     }
                 })
                 .catch(function(error) {
@@ -2002,7 +1996,6 @@
                     
                     let addedCount = 0;
                     let skippedCount = 0;
-                    const totalToAdd = snapshot.size;
                     
                     const promises = [];
                     
@@ -2068,7 +2061,6 @@
             
             let addedCount = 0;
             let skippedCount = 0;
-            const totalToAdd = currentCategoryWords.length;
             const categoryName = currentCategoryWords[0]?.categoryName || 'Chủ đề';
             
             const promises = [];
@@ -2465,7 +2457,7 @@
                                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
                             }).then(function() {
                                 addedCount++;
-                                const addBtn = document.querySelector('.ai-add-btn[data-index="' +' + i + '"]');
+                                const addBtn = document.querySelector('.ai-add-btn[data-index="' + i + '"]');
                                 if (addBtn) {
                                     addBtn.textContent = 'Đã thêm';
                                     addBtn.classList.add('added');
@@ -2638,7 +2630,7 @@
         }
 
         // ============================================================
-        // DỊCH GIỌNG NÓI + VĂN BẢN (ĐÃ TÁCH KHỎI CHATBOT)
+        // DỊCH GIỌNG NÓI + VĂN BẢN
         // ============================================================
         let isVoiceRecording = false;
         let currentRecognition = null;
@@ -2720,18 +2712,15 @@
         }
 
         async function translateTextWithAI(text, direction) {
-            // Dịch bằng code thuần (API dịch miễn phí), KHÔNG dùng AI → nhanh hơn nhiều
             const sourceLang = direction === 'vi-en' ? 'vi' : 'en';
             const targetLang = direction === 'vi-en' ? 'en' : 'vi';
             const encoded = encodeURIComponent(text);
 
-            // Cách 1: Google Translate (endpoint miễn phí, rất nhanh)
             try {
                 const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + sourceLang + '&tl=' + targetLang + '&dt=t&q=' + encoded;
                 const response = await fetch(url);
                 if (response.ok) {
                     const data = await response.json();
-                    // data[0] là mảng các đoạn [[translated, original], ...]
                     if (data && data[0]) {
                         let result = '';
                         for (let i = 0; i < data[0].length; i++) {
@@ -2746,7 +2735,6 @@
                 console.warn('Google Translate fallback:', e);
             }
 
-            // Cách 2: MyMemory (dự phòng nếu Google lỗi)
             try {
                 const url2 = 'https://api.mymemory.translated.net/get?q=' + encoded + '&langpair=' + sourceLang + '|' + targetLang;
                 const response2 = await fetch(url2);
@@ -2820,7 +2808,6 @@
                     showTranslateResult(transcript, translated, direction);
                     addToTranslateHistory(transcript, translated, direction);
                     if (statusEl) statusEl.textContent = '✓ Dịch xong! Bản dịch đã được đọc to.';
-                    // Đọc to bản dịch
                     const speakLang = direction === 'vi-en' ? 'en-US' : 'vi-VN';
                     speakText(translated, 0.9, 1, speakLang);
                 } catch (err) {
@@ -2925,7 +2912,6 @@
                 });
             }
             
-            // ===== NÚT HỌC TẬP CHÍNH (mở popup 6 chức năng) =====
             const studyMainBtn = document.getElementById('study-main');
             if (studyMainBtn) {
                 studyMainBtn.addEventListener('click', function() {
@@ -2942,12 +2928,10 @@
                 });
             }
 
-            // Các nút con trong popup Học tập
             const studyStart = document.getElementById('study-start');
             if (studyStart) {
                 studyStart.addEventListener('click', function() {
                     document.getElementById('study-menu').classList.remove('active');
-                    // Gọi logic bắt đầu học
                     if (userCards.length === 0) {
                         showAlert('Bạn chưa có thẻ nào để học! Hãy thêm một số thẻ trước.');
                         return;
@@ -3062,7 +3046,6 @@
                 });
             }
 
-            // ===== NÚT DỊCH (chỉ dịch, không còn chat) =====
             const translateBtn = document.getElementById('translate');
             if (translateBtn) {
                 translateBtn.addEventListener('click', function() {
@@ -3095,7 +3078,6 @@
                 });
             }
 
-            // Các nút hỗ trợ kết quả dịch
             const speakOriginalBtn = document.getElementById('speak-original-btn');
             if (speakOriginalBtn) {
                 speakOriginalBtn.addEventListener('click', function() {
@@ -3164,7 +3146,6 @@
                 });
             }
 
-            // ===== NÚT CHAT AI (mở link ngoài) =====
             const chatbotBtn = document.getElementById('chatbot');
             if (chatbotBtn) {
                 chatbotBtn.addEventListener('click', function() {
@@ -3358,7 +3339,7 @@
             if (user) {
                 console.log('User logged in:', user.uid);
                 loadUserCards();
-                loadUserRole(); // Kiểm tra role và thêm nút admin nếu cần
+                loadUserRole();
             } else {
                 auth.signInAnonymously()
                     .then(function() {
