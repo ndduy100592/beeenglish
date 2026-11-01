@@ -1073,13 +1073,25 @@
             </div>
         </div>
 
-        <!-- Popup thêm từ mới -->
+        <!-- Popup thêm từ mới (THỦ CÔNG) -->
         <div class="pop-up" id="add-menu">
             <div class="pop-up-content">
                 <span id="close-add-menu" class="material-symbols-outlined close">close</span>
-                <h2>Thêm từ mới</h2>
+                <h2>Thêm từ mới (thủ công)</h2>
                 <div class="form-group">
-                    <input type="text" placeholder="Nhập từ tiếng Anh" id="word" />
+                    <input type="text" placeholder="Từ tiếng Anh *" id="word" />
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Phiên âm IPA (ví dụ: /ˈæp.əl/) *" id="pronunciation" />
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="Nghĩa tiếng Việt *" id="meaning" />
+                </div>
+                <div class="form-group">
+                    <textarea id="example" rows="2" placeholder="Câu ví dụ tiếng Anh (tùy chọn)"></textarea>
+                </div>
+                <div class="form-group">
+                    <textarea id="exampleTranslation" rows="2" placeholder="Bản dịch câu ví dụ tiếng Việt (tùy chọn)"></textarea>
                 </div>
                 <button type="button" id="submit" class="btn">Thêm từ</button>
             </div>
@@ -2109,7 +2121,7 @@
         }
 
         // ============================================================
-        // HIỂN THỊ THẺ HỌC (BẮT ĐẦU HỌC) - ĐÃ THÊM PHIÊN ÂM Ở MẶT TRƯỚC
+        // HIỂN THỊ THẺ HỌC (BẮT ĐẦU HỌC) - PHIÊN ÂM Ở MẶT TRƯỚC (TỪ TIẾNG ANH)
         // ============================================================
         function showCard() {
             if (currentCardIndex >= cardsToLearn.length) {
@@ -2135,7 +2147,7 @@
             wordTitle.textContent = card.word;
             wordContainer.appendChild(wordTitle);
             
-            // PHIÊN ÂM Ở MẶT TRƯỚC (nếu có)
+            // PHIÊN ÂM Ở MẶT TRƯỚC (dưới từ tiếng Anh)
             if (card.pronunciation) {
                 const pronDiv = document.createElement('div');
                 pronDiv.className = 'front-pronunciation';
@@ -2157,10 +2169,6 @@
             backHtml += '<div class="word-with-voice">';
             backHtml += '<h1>' + escapeHtml(card.meaning) + '</h1>';
             backHtml += '</div>';
-            
-            if (card.pronunciation) {
-                backHtml += '<div style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;">/' + escapeHtml(card.pronunciation) + '/</div>';
-            }
             
             if (card.example) {
                 backHtml += '<div class="example-with-voice" style="flex-direction: column; margin-top: 10px;">';
@@ -2216,7 +2224,7 @@
         }
 
         // ============================================================
-        // HIỂN THỊ THẺ ÔN TẬP - ĐÃ THÊM PHIÊN ÂM Ở MẶT TRƯỚC
+        // HIỂN THỊ THẺ ÔN TẬP - PHIÊN ÂM Ở MẶT TRƯỚC (TỪ TIẾNG ANH)
         // ============================================================
         function showReviewCard() {
             if (currentCardIndex >= cardsToReview.length) {
@@ -2242,7 +2250,7 @@
             wordTitle.textContent = card.word;
             wordContainer.appendChild(wordTitle);
             
-            // PHIÊN ÂM Ở MẶT TRƯỚC (nếu có)
+            // PHIÊN ÂM Ở MẶT TRƯỚC (dưới từ tiếng Anh)
             if (card.pronunciation) {
                 const pronDiv = document.createElement('div');
                 pronDiv.className = 'front-pronunciation';
@@ -2264,10 +2272,6 @@
             backHtml += '<div class="word-with-voice">';
             backHtml += '<h1>' + escapeHtml(card.meaning) + '</h1>';
             backHtml += '</div>';
-            
-            if (card.pronunciation) {
-                backHtml += '<div style="font-size: 0.9rem; margin-top: 5px; opacity: 0.9;">/' + escapeHtml(card.pronunciation) + '/</div>';
-            }
             
             if (card.example) {
                 backHtml += '<div class="example-with-voice" style="flex-direction: column; margin-top: 10px;">';
@@ -3202,14 +3206,34 @@
                 });
             }
             
+            // ============================================================
+            // THÊM TỪ THỦ CÔNG - NGƯỜI DÙNG TỰ NHẬP ĐẦY ĐỦ
+            // ============================================================
             const submitBtn = document.getElementById('submit');
             if (submitBtn) {
-                submitBtn.addEventListener('click', async function() {
+                submitBtn.addEventListener('click', function() {
                     const wordInput = document.getElementById('word');
+                    const pronunciationInput = document.getElementById('pronunciation');
+                    const meaningInput = document.getElementById('meaning');
+                    const exampleInput = document.getElementById('example');
+                    const exampleTranslationInput = document.getElementById('exampleTranslation');
+                    
                     const word = wordInput ? wordInput.value.trim() : '';
+                    const pronunciation = pronunciationInput ? pronunciationInput.value.trim() : '';
+                    const meaning = meaningInput ? meaningInput.value.trim() : '';
+                    const example = exampleInput ? exampleInput.value.trim() : '';
+                    const exampleTranslation = exampleTranslationInput ? exampleTranslationInput.value.trim() : '';
                     
                     if (!word) {
                         showAlert('Vui lòng nhập từ tiếng Anh!');
+                        return;
+                    }
+                    if (!pronunciation) {
+                        showAlert('Vui lòng nhập phiên âm IPA!');
+                        return;
+                    }
+                    if (!meaning) {
+                        showAlert('Vui lòng nhập nghĩa tiếng Việt!');
                         return;
                     }
                     
@@ -3219,35 +3243,34 @@
                         return;
                     }
                     
-                    showLoading('AI đang tạo từ "' + word + '"...');
-                    
-                    const wordData = await getFullWordDataFromAI(word);
-                    
-                    const finalMeaning = wordData.meaning || word;
-                    const finalExample = wordData.example || '';
-                    const finalPronunciation = wordData.pronunciation || '';
-                    const finalExampleTranslation = wordData.exampleTranslation || '';
+                    // Làm sạch phiên âm (bỏ dấu / nếu người dùng đã ghi)
+                    let cleanPron = pronunciation;
+                    if (cleanPron.startsWith('/') && cleanPron.endsWith('/')) {
+                        cleanPron = cleanPron.slice(1, -1);
+                    }
                     
                     db.collection('users').doc(user.uid).collection('cards').add({
                         word: word,
-                        meaning: finalMeaning,
-                        example: finalExample,
-                        pronunciation: finalPronunciation,
-                        exampleTranslation: finalExampleTranslation,
+                        meaning: meaning,
+                        example: example,
+                        pronunciation: cleanPron,
+                        exampleTranslation: exampleTranslation,
                         status: 'learning',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     })
                     .then(function() {
                         if (wordInput) wordInput.value = '';
+                        if (pronunciationInput) pronunciationInput.value = '';
+                        if (meaningInput) meaningInput.value = '';
+                        if (exampleInput) exampleInput.value = '';
+                        if (exampleTranslationInput) exampleTranslationInput.value = '';
                         const addMenu = document.getElementById('add-menu');
                         if (addMenu) addMenu.classList.remove('active');
                         showAlert('Đã thêm từ "' + word + '" thành công!');
-                        hideLoading();
                     })
                     .catch(function(error) {
                         console.error('Error adding card: ', error);
                         showAlert('Có lỗi xảy ra khi thêm từ!');
-                        hideLoading();
                     });
                 });
             }
